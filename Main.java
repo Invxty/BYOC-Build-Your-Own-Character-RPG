@@ -52,11 +52,11 @@ public class Main {
     public static void main(String[] args) {
         
         Boss Boarking = new Boss("Boar king", 50, 1000, 20, 10, 0," is now charing a heavy attack for 2 rounds!");
-
+        MonsterClass slime = new MonsterClass("Slime", 25, 500, 10, 5);
         
-        Boarking.attack(); 
+        Boarking.attack(); //sample boss attack
+        Boarking.abilityUse(); //sample ability use, not sure pa pano 'to iimplement
 
-      
-        Boarking.abilityUse(); 
+        slime.attack(); //Common enemy attack
     }
 }

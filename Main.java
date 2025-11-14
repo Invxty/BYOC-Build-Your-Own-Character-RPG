@@ -1,70 +1,62 @@
-import java.util.Random;
-import java.util.Scanner;
 
-class Character {
+class Player {
+    static int hp = 100; 
+}
+
+
+class MonsterClass {
     String name;
+    int atk;
     int hp;
-    int attack;
+    int def;
+    int sp;
 
-    Character(String name, int hp, int attack) {
+    
+    MonsterClass(String name, int atk, int hp, int def, int sp) {
         this.name = name;
+        this.atk = atk;
         this.hp = hp;
-        this.attack = attack;
+        this.def = def;
+        this.sp = sp;
+    }
+
+    
+    public void attack() {
+        System.out.println(this.name + " attacks for " + this.atk + " damage!");
+        Player.hp -= this.atk;
+        System.out.println("Player HP is now: " + Player.hp);
     }
 }
 
-public class Main {
 
-    // Generate a random character
-    public static Character generateRandomCharacter(String label) {
-        Random rand = new Random();
-        String[] names = {"Astra", "Rogar", "Mira", "Drakon", "Zephyr", "Kael", "Nyra"};
-
-        String name = names[rand.nextInt(names.length)];
-        int hp = rand.nextInt(41) + 60;     // HP between 60–100
-        int attack = rand.nextInt(6) + 10;  // Attack between 10–15
-
-        return new Character(label + " " + name, hp, attack);
+class Boss extends MonsterClass { 
+    int phases;
+    String ability; 
+  
+    Boss(String name, int atk, int hp, int def, int sp, int phases, String ability) {
+        
+        super(name, atk, hp, def, sp); 
+        this.phases = phases;
+        this.ability = ability;
     }
 
+    
+    public void abilityUse() {
+        System.out.println(this.name + " uses a special ability!");
+        System.out.println(this.name + this.ability);
+    }
+}
+
+
+public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        
+        Boss Boarking = new Boss("Boar king", 50, 1000, 20, 10, 0," is now charing a heavy attack for 2 rounds!");
 
-        // Generate your character & enemy
-        Character player = generateRandomCharacter("Player");
-        Character enemy = generateRandomCharacter("Enemy");
+        
+        Boarking.attack(); 
 
-        System.out.println("=== RANDOM CHARACTER GENERATOR ===");
-        System.out.println("You got: " + player.name + " | HP: " + player.hp + " | ATK: " + player.attack);
-        System.out.println("Enemy:  " + enemy.name + " | HP: " + enemy.hp + " | ATK: " + enemy.attack);
-
-        System.out.println("\n=== TURN-BASED BATTLE STARTS ===");
-
-        // Game loop
-        while (player.hp > 0 && enemy.hp > 0) {
-            System.out.println("\nYour turn! (press ENTER to attack)");
-            scanner.nextLine();
-
-            // Player attacks
-            enemy.hp -= player.attack;
-            System.out.println(">>> You dealt " + player.attack + " damage!");
-            if (enemy.hp <= 0) break;
-
-            // Enemy attacks back
-            System.out.println(enemy.name + " attacks!");
-            player.hp -= enemy.attack;
-            System.out.println(">>> Enemy dealt " + enemy.attack + " damage!");
-
-            // Display HP
-            System.out.println("\nYour HP: " + player.hp);
-            System.out.println("Enemy HP: " + enemy.hp);
-        }
-
-        System.out.println("\n=== BATTLE RESULT ===");
-        if (player.hp > 0) {
-            System.out.println("🎉 You WIN!");
-        } else {
-            System.out.println("💀 You LOST!");
-        }
+      
+        Boarking.abilityUse(); 
     }
 }

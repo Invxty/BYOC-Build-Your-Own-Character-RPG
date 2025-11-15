@@ -1,7 +1,60 @@
+import java.util.Scanner;
 
 class Player {
-    static int hp = 1000; 
+    String name, raceName, weaponName, move1Name, move2Name;
+    int hp, maxHp, atk, def, sp, statPointsToSpend;
+    private Scanner scanner;
+
+    public Player(String name, Race race, Weapon weapon) {
+        this.name = name;
+        this.scanner = new Scanner(System.in);
+        this.raceName = race.raceName;
+        this.weaponName = weapon.weaponName;
+        this.move1Name = weapon.move1Name;
+        this.move2Name = weapon.move2Name;
+
+        //Combined stats
+        this.maxHp = race.hp + weapon.hp;
+        this.hp = this.maxHp;
+        this.atk = race.atk + weapon.atk;
+        this.def = race.def + weapon.def;
+        this.sp = race.sp + weapon.sp;
+        this.statPointsToSpend = 0;
+
+        System.out.print("\n Welcome, " + this.name + ", the " + this.raceName + "!");
+
+    }
 }
+
+class Race {
+    String raceName;
+    int hp, atk, def, sp;
+
+    public Race(String raceName, int hp, int atk, int def, int sp) {
+        this.raceName = raceName;
+        this.hp = hp;
+        this.atk = atk;
+        this.def = def;
+        this.sp = sp;
+    }
+}
+
+class Weapon {
+    String weaponName, move1Name, move2Name;
+    int hp, atk, def, sp;
+
+    public Weapon(String name, int hp, int atk, int def, int sp, String m1, String m2) {
+        this.weaponName = name;
+        this.hp = hp;
+        this.atk = atk;
+        this.def = def;
+        this.sp = sp;
+        this.move1Name = m1;
+        this.move2Name = m2;
+
+    }
+}
+
 
 
 class MonsterClass {
@@ -31,122 +84,50 @@ class MonsterClass {
 
 class Boss extends MonsterClass { 
     int phases;
-
-    Boss(String name, int atk, int hp, int def, int sp, int phases) {
+    String ability; 
+  
+    Boss(String name, int atk, int hp, int def, int sp, int phases, String ability) {
         
         super(name, atk, hp, def, sp); 
         this.phases = phases;
+        this.ability = ability;
     }
+
     
-    public void takeTurn(){
-        super.attack();
+    public void abilityUse() {
+        System.out.println(this.name + " uses a special ability!");
+        System.out.println(this.name + this.ability);
     }
 }
 
-
- class BoarKing extends Boss{
-    private boolean isCharging = false; 
-    private int chargeCount = 0;
-
-    public BoarKing(String name, int atk, int hp, int def, int sp, int phases) {
-        super(name, atk, hp, def, sp, phases);
-    }
-
-    @Override
-    public void takeTurn() {
-        if (isCharging) {
-            handleChargingLogic();
-        } else {
-
-            if (Math.random() < 0.3) {
-                startCharging();
-            } else {
-                super.attack(); 
-            }
-        }
-    }
-
-    private void startCharging() {
-        System.out.println(this.name + " scrapes the ground... (Charging Ability)");
-        isCharging = true;
-        chargeCount = 0;
-    }
-
-    private void handleChargingLogic() {
-        chargeCount++;
-        if (chargeCount >= 2) {
-            System.out.println(">>> " + this.name + " UNLEASHES BOAR SMASH! <<<");
-            Player.hp -= 250; // Huge damage
-            System.out.println("Player took 250 damage!");
-            isCharging = false; // Reset state
-        } else {
-            System.out.println(this.name + " is building up power... (Round " + chargeCount + ")");
-        }
-    }
-}
-
-class Litch extends Boss{
-    private int Rounds = 0;
-    private boolean Curse = false;
-
-    public Litch(String name, int atk, int hp, int def, int sp, int phases) {
-        super(name, atk, hp, def, sp, phases);
-    }
-    @Override
-    public void takeTurn() {
-        if (Curse) {
-            if(Rounds > 0){
-            handleCurse();
-            super.attack();
-            }
-            else{
-                System.out.println("Curse has taken effect... Game over...");
-                Player.hp -= Player.hp;
-            }
-        } 
-        else {
-            startCurse();
-            }
-        }
-    
-    private void startCurse() {
-        System.out.println(this.name + " cursed player! (15 rounds till death)");
-        Curse = true;
-        Rounds = 15;
-    }
-
-    private void handleCurse(){
-        Rounds--;
-        System.out.println("You are cursed... (" + Rounds + " Rounds remaining!)");
-    }
-    }
-    
-
-class SkelKing extends Boss{
-    private int Armor = 500;
-    private int ArmorDurability = 3;
-    public SkelKing(String name, int atk, int hp, int def, int sp, int phases) {
-        super(name, atk, hp, def, sp, phases);
-    }
-
-
-    private void ArmorCondition(){
-        if(ArmorDurability > 0){
-            if(Armor == 0){
-                
-            }
-        }
-    }
-
-}
 
 public class Main {
     public static void main(String[] args) {
-  
-        Boss currentBoss = new BoarKing("Litch", 60, 1000, 20, 10, 0);
+        //Stats data for the RACES
+        Race human = new Race("Human", 1000, 50, 50, 25);
+        Race elf = new Race("Elf", 1000, 65, 30, 35);
+        Race dwarf = new Race("Dwarf", 1500, 30, 65, 20);
+        Race angel = new Race("Angel", 2000, 35, 80, 25);
+        Race demon = new Race("Demon", 800, 80, 35, 50);
+        Race god = new Race("God", 2000, 100, 100, 50);
+
+        //Stats data for the WEAPONS
+        Weapon longsword = new Weapon("Longsword", 500, 5, 10, 0, "Slash", "Parr");
+        Weapon dagger = new Weapon("Dagger", 0, 5, 5, 10, "Stab", "Quicken");
+        Weapon bow = new Weapon("Bow", 0, 10, 0, 5, "Arrow Shot", "Lock in");
+        Weapon fire = new Weapon("Fire Element", 0, 5, 0, 5, "Ember", "Flame Wall");
+        Weapon water = new Weapon("Water Element", 500, 5, 0, 0, "Water Jet", "Fountain of Life");
+        Weapon earth = new Weapon("Earth Element", 250, 0, 10, 0, "Landslide", "Earth Wall");
+        Weapon air = new Weapon("Air Element", 0, 5, 0, 10, "Air Slash", "Wind Chant");
+
+
+
+        Boss Boarking = new Boss("Boar king", 50, 1000, 20, 10, 0," is now charing a heavy attack for 2 rounds!");
         MonsterClass slime = new MonsterClass("Slime", 25, 500, 10, 5);
-        while (Player.hp > 0 && currentBoss.hp > 0) { 
-            currentBoss.takeTurn();
+        
+        Boarking.attack(); //sample boss attack
+        Boarking.abilityUse(); //sample ability use, not sure pa pano 'to iimplement
+
+        slime.attack(); //Common enemy attack
     }
-}
 }
